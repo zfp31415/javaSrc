@@ -15,14 +15,33 @@
     <property name="url" value="jdbc:mysql://localhost:3306/demo_db"></property>
    <property name ="username" value="root"></property>
    <property name="password" value="root"></property>
+   <!-- 启动时创建的链接数量 -->
+   <property name="initialSize"  value ="5"></property>
    <!-- 最大连接数据库连接数，设为0表示没有限制 -->
    <property name="maxActive" value="100"></property>
-   <!-- 最大的空闲链接数，这里数值为20 ，表示即使没有数据库链接时依然可以保持20空闲的链接，而不被清楚，出于随时待命的
-   状态 -->
+   <!-- 最大的空闲链接数，这里数值为20 ，表示即使没有数据库链接时依然可以保持20空闲的链接，而不被清楚，出于随时待命的 状态 -->
    <property name="minIdle" value="30"></property>
    <!-- 表示最大等待秒钟数，取值为-1的时候表示，无线等待，直到超时为止，500表示等到时间为0.5秒 -->
    <property name="maxWait" value="500"></property>
    <property name="defaultAutoCommit" value="true"></property>
+</bean>
+
+<!-- 配置jdbc的模板类 -->
+<bean id ="jdbcTemplate" class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
+     <constructor-arg>
+         <ref bean="dataSource" />
+     </constructor-arg>
+</bean>
+
+
+<bean id="simpleJdbcTemplate" class="org.springframework.jdbc.core.simple.SimpleJdbcTemplate"> 
+     <constructor-arg>
+        <ref bean="dataSource"  />
+     </constructor-arg>
+</bean>
+
+<bean id="userDao"  class="com.zfp.dao.impl.UserDaoImpl"  >
+     <property name="jdbcTemplate" ref="simpleJdbcTemplate" ></property>
 </bean>
 
 </beans>
